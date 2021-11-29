@@ -1,62 +1,39 @@
-﻿#include <iostream>
+﻿//// создаем хранилище
+//MyStorage storage();
+//// добавляем в него объекты
+//for (int i = 0; i < 10; i++)
+//	storage.add(new SomeObject());
+//// обращаемся поочередно ко всем
+//for (storage.first(); !storage.eol(); storage.next())
+//storage.getObject().someMethod();
+
+
+#include <iostream>
 
 using namespace std;
 
-class MyStorage {
-private:
-	MyStorage* storage;
-protected:
-	int iter;
-	int size;
+class Obj{									//The Abstract class
 public:
-	void sizeImprove() {
-		MyStorage newStorage;								//we made it static so it'll automatically delete
-		int newsize = this->size + 1;
-		newStorage = new MyStorage[newsize];
-		for (int i = 0; i < this->size; i++)
-			newStorage.storage[i] = this->storage[i];
+	virtual void add(One& one) {
 
-		delete[] this->storage;
-		this->size = size + 1;
-		storage = new MyStorage[size];
-		for (int i = 0; i < this->size; i++)
-			this->storage[i] = newStorage.storage[i];
-		
 	}
 
-	void add(One one) {
-		this->sizeImprove();
-		this->storage[this->size] = one;
+	Obj() {
 	}
-
-	MyStorage() {
-		storage = nullptr;
-		iter = 0;
-		size = 0;
-	}
-	MyStorage(int iter, int size) {
-		this->iter = 0;
-		this->size = size;
-		storage = new MyStorage[size];
-	}
-	MyStorage(MyStorage* storage) {
-		this->size = storage->size;
-
-		this->storage = new MyStorage[size];
-
-		for (int i = 0; i < storage->size; i++)
-			this->storage[i] = storage[i];
-	}
-	virtual ~MyStorage() {
-		delete[]storage;
+	~Obj() {
 	}
 };
 
-class One :public MyStorage {
+
+class One: public Obj{
 private:
 	char* str;
 	int length;
 public:
+	void add() {
+		printf("one->add");
+	}
+
 	One() {
 		str = nullptr;
 		length = 0;
@@ -76,13 +53,31 @@ public:
 	}
 };
 
+class MyStorage {
+private:
+	Obj** storage;
+public:
+	int iter;
+	int size;
+
+	MyStorage() {
+		int iter = 0;
+		int size = 10;
+		storage = new Obj * [size];
+	}
+	~MyStorage() {
+		for (int i = 0; i < size; i++)
+			delete storage[i];
+		delete[] storage;
+	}
+};
+
+
+
 int main()
 {
-	MyStorage* storage;
 
-	One one("11111");
 
-	storage->add(&one);
 
 	return 0;
 }
