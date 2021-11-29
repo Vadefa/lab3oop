@@ -101,7 +101,6 @@ public:
 	}
 
 	Obj getObject(int iter) {
-		iter = rand() % count + 1;
 		return *storage[iter];
 	}
 
