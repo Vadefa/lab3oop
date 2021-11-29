@@ -9,11 +9,16 @@
 
 
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 
-class Obj{									//The Abstract class
+//The Abstract class:
+class Obj {
 public:
+	virtual void someMethod() {
+		this->someMethod();
+	}
 
 	Obj() {
 	}
@@ -27,6 +32,19 @@ private:
 	char* str;
 	int length;
 public:
+	void someMethod() {
+		int a = rand() % 3;
+		if (a == 1)
+			this->numbers();
+		else
+			this->words();
+	}
+	void numbers() {
+		cout << "11111" << endl;
+	}
+	void words() {
+		cout << "one one one" << endl;
+	}
 	void add() {
 		printf("one->add");
 	}
@@ -82,6 +100,11 @@ public:
 		iter = iter + 1;
 	}
 
+	Obj getObject(int iter) {
+		iter = rand() % count + 1;
+		return *storage[iter];
+	}
+
 	MyStorage() {
 		iter = 0;
 		count = 0;
@@ -101,9 +124,14 @@ public:
 
 int main()
 {
+	srand(time(NULL));
+
 	MyStorage storage;
 	for (int i = 0; i < 5; i++)
-		storage.add(new One);
+		storage.add(new One("11111"));
+
+	for (int i = 0; i < 5; i++)
+		storage.getObject(i).someMethod();
 
 	return 0;
 }
