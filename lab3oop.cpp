@@ -14,13 +14,10 @@ using namespace std;
 
 class Obj{									//The Abstract class
 public:
-	virtual void add(One& one) {
-
-	}
 
 	Obj() {
 	}
-	~Obj() {
+	virtual ~Obj() {
 	}
 };
 
@@ -59,11 +56,39 @@ private:
 public:
 	int iter;
 	int size;
+	int count;
+
+	void sizeImprove() {
+		Obj** tempStorage = new Obj*[size];
+		for (int i = 0; i < size; i++)
+			tempStorage[i] = storage[i];
+
+		size = size + 1;
+
+		storage = new Obj * [size];
+		for (int i = 0; i < size - 1; i++)
+			storage[i] = tempStorage[i];
+		storage[size - 1] = nullptr;
+	}
+
+	void add(Obj *object) {
+		count = count + 1;
+		if (count <= size)
+			storage[iter] = object;
+		else {
+			sizeImprove();
+			storage[size - 1] = object;
+		}
+		iter = iter + 1;
+	}
 
 	MyStorage() {
-		int iter = 0;
-		int size = 10;
+		iter = 0;
+		count = 0;
+		size = 2;
 		storage = new Obj * [size];
+		for (int i = 0; i < size; i++)
+			storage[i] = nullptr;
 	}
 	~MyStorage() {
 		for (int i = 0; i < size; i++)
@@ -76,8 +101,9 @@ public:
 
 int main()
 {
-
-
+	MyStorage storage;
+	for (int i = 0; i < 5; i++)
+		storage.add(new One);
 
 	return 0;
 }
