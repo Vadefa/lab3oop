@@ -29,9 +29,6 @@ public:
 
 
 class One: public Obj{
-private:
-	char* str;
-	int length;
 public:
 	void someMethod() {
 		int a = rand() % 3;
@@ -52,21 +49,8 @@ public:
 	}
 
 	One() {
-		str = nullptr;
-		length = 0;
-	}
-	One(const char* one) {
-		this->length = strlen(one);
-
-		this->str = new char[length + 1];
-
-		for (int i = 0; i < length; i++)
-			this->str[i] = one[i];
-
-		this->str[length] = '\0';
 	}
 	~One() {
-		delete[]str;
 	}
 };
 
@@ -221,7 +205,7 @@ public:
 		count = count + 1;
 	}
 	void remove() {
-		if ((count > 0) && (storage[iter] != nullptr)) {
+		if ((count > 0) && (storage[iter] != nullptr) && (iter < size)) {
 			delete storage[iter];
 			storage[iter] = nullptr;
 			count = count - 1;
@@ -239,13 +223,12 @@ public:
 		iter = 0;
 	}
 	void next() {
-		iter = iter + 1;
+		if (iter < size)
+			iter = iter + 1;
 	}
 	void back() {
 		if (iter > 0)
 			iter = iter - 1;
-		else
-			cout << "It is the first object in the storage" << endl;
 	}
 	Obj* getObject() {
 		return storage[iter];
