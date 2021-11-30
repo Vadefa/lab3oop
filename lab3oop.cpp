@@ -142,6 +142,32 @@ protected:
 	int count;
 	int classes = 4;							//amount of different classes, whose objects we can fit there
 public:
+	void names() {
+		cout << "\nWe have those objects in the storage" << endl;
+		int tempiter = iter;
+		for (iter = 0; iter < size; iter = iter + 1)
+			if (storage[iter] != nullptr)
+				storage[iter]->name();
+			else
+				cout << "null" << endl;
+		iter = tempiter;
+	}
+	int getIter() {
+		return iter;
+	}
+
+	void shift() {
+		Obj** tempStorage = new Obj * [size - iter + 1];		// we putting an element after the storage[iter] element
+		for (int i = iter + 1; i < size; i++)
+			tempStorage[i - iter - 1] = storage[i];
+			
+		sizeImprove();
+		storage[iter + 1] = nullptr;
+
+		for (int i = iter + 2; i < size; i++)
+			storage[i] = tempStorage[i - iter - 2];
+	}
+
 	void sizeImprove() {
 		Obj** tempStorage = new Obj*[size];
 		for (int i = 0; i < size; i++)
@@ -176,13 +202,22 @@ public:
 			break;
 		}
 		}
-		if (count < size)
-			storage[iter] = object;
-		else {
-			sizeImprove();
-			storage[size - 1] = object;
+		if (iter < size) {
+			if (storage[iter] == nullptr) {
+				storage[iter] = object;
+				iter = iter + 1;
+			}
+			else {
+				shift();
+				iter = iter + 1;
+				storage[iter] = object;
+			}
 		}
-		iter = iter + 1;
+		else if (iter == size){
+			sizeImprove();
+			storage[iter] = object;
+			iter = iter + 1;
+		}
 		count = count + 1;
 	}
 	void remove() {
@@ -231,26 +266,75 @@ public:
 	}
 };
 
+void proceed(MyStorage& storage) {
+	cout << "You are now at the " << storage.getIter() << " element. Type, where should we proceed to" << endl
+		<< "(-2 - go to the 2nd element upstairs, +2 - go to the 2nd elements downstairs, 0 - current element) -> "; int a;
+	cin >> a;
+	if (a > 0)
+		for (int i = a; i > 0; i = i - 1)
+			storage.next();
+	else
+		for (int i = a; i < 0; i = i + 1)
+			storage.back();
+	cout << "Now you are at the " << storage.getIter() << " element." << endl;
+}
+bool ask() {
+
+	return true;
+}
+
 void subMenu(MyStorage& storage)
 {
-	cout << "What do you want to do? (1 - add an object, 0 - remove an object) -> ";
-	bool a;
+	storage.names();
+
+	cout << "\nWhat do you want to do? \n1 - add objects\n2 - remove objects\n3 - call a method of an object\n ==> ";
+	short a;
 	cin >> a;
 
-	cout << "How much?" << endl;
-	int n;
-	cin >> n;
+	proceed(storage);						// asking, to what element should we proceed
 
-	if (a == true)
+	switch (a) {
+	case 1: {
+		cout << "How much objects shoud we add?" << endl;
+		int n;
+		cin >> n;
 		for (int i = 0; i < n; i++)
 			storage.add();
-	else
-		for (int i = 0; i < n; i++)
+		storage.names();
+		break;
+	}
+	case 2: {
+		cout << "How much objects shoud we delete?" << endl;
+		int n;
+		cin >> n;
+		for (int i = 0; i < n; i++) {
 			storage.remove();
+			storage.next();
+		}
+		storage.names();
+		break;
+	}
+	case 3: {
+		if (storage.getObject() != nullptr)
+			storage.getObject()->someMethod();
+		else
+			cout << "This element of the storage is empty" << endl;
+		break;
+	}
+	default:
+		cout << "You should have typed a number 1, 2 or 3" << endl;
+		subMenu(storage);
+		return;
+	}
 
-	cout << "Now we have those objects here:" << endl;
-	for (storage.first(); !storage.eol(); storage.next())
-		storage.getObject()->name();
+	cout << "Do you want to do something else with the current storage?(1 - yes, 0 - no) -> ";
+	cin >> a;
+	if (a == 1)
+		subMenu(storage);
+	else
+		return;
+	
+	return;
 }
 
 void menu()
@@ -283,7 +367,7 @@ void menu()
 	double end = clock();
 	cout << "Program working time equals " << (end - start)/1000 << " seconds" << endl;
 
-	cout << "Do you want to add/remove some object? (1 - yes, 0 - no) -> ";
+	cout << "Do you want to work with the current storage? (1 - yes, 0 - no) -> ";
 	bool a;
 	cin >> a;
 	if (a == true)
