@@ -67,6 +67,55 @@ public:
 	}
 };
 
+class Boom : public Obj {
+public:
+	void someMethod() {
+		int a = rand() % 3;
+		if (a == 1)
+			this->boom();
+		else
+			this->caboom();
+	}
+	void boom() {
+		cout << "BOOM" << endl;
+	}
+	void caboom() {
+		cout << "CABOOM" << endl;
+	}
+	Boom() {
+	}
+	~Boom() {
+	}
+};
+
+class Earth : public Obj {
+public:
+	void someMethod() {
+		this->rotation();
+	}
+	void rotation() {
+		cout << "Earth turned" << endl;
+	}
+	
+	Earth() {
+	}
+	~Earth(){
+	}
+};
+class Continent : public Earth {
+public:
+	void someMethod() {
+		this->print();
+	}
+	void print() {
+		cout << "This is a continent" << endl;
+	}
+	Continent() {
+	}
+	~Continent() {
+	}
+};
+
 class MyStorage {
 private:
 	Obj** storage;
@@ -74,7 +123,7 @@ protected:
 	int iter;
 	int size;
 	int count;
-	int classes = 1;							//amount of different classes, whose objects we can fit there
+	int classes = 4;							//amount of different classes, whose objects we can fit there
 public:
 	void sizeImprove() {
 		Obj** tempStorage = new Obj*[size];
@@ -93,9 +142,22 @@ public:
 		Obj* object = nullptr;
 		int a = rand() % classes + 1;
 		switch (a) {
-		case 1:
+		case 1: {
 			object = new One;
 			break;
+		}
+		case 2: {
+			object = new Boom;
+			break;
+		}
+		case 3: {
+			object = new Earth;
+			break;
+		}
+		case 4: {
+			object = new Continent;
+			break;
+		}
 		}
 		if (count < size)
 			storage[iter] = object;
@@ -125,7 +187,7 @@ public:
 	MyStorage() {
 		iter = 0;
 		count = 0;
-		size = 2;
+		size = 1;
 		storage = new Obj * [size];
 		for (int i = 0; i < size; i++)
 			storage[i] = nullptr;
@@ -164,18 +226,20 @@ void menu()
 	double end = clock();
 	cout << "Program working time equals " << (end - start)/1000 << " seconds" << endl;
 
-	cout << "Do you want to restart? (1 - yes, 0 - no) -> ";
-	bool a;
-	cin >> a;
-	if (a == true)
-		menu();
-	else
-		return;
 }
 
 int main()
 {
 	menu();
+
+
+	cout << "Do you want to restart? (1 - yes, 0 - no) -> ";
+	bool a;
+	cin >> a;
+	if (a == true)
+		main();
+	else
+		return 0;
 
 	return 0;
 }
