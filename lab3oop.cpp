@@ -18,6 +18,8 @@ class Obj {
 public:
 	virtual void someMethod() {
 	}
+	virtual void name() {
+	}
 
 	Obj() {
 	}
@@ -44,8 +46,9 @@ public:
 	void words() {
 		cout << "one one one" << endl;
 	}
-	void add() {
-		printf("one->add");
+
+	void name() {
+		cout << "One" << endl;
 	}
 
 	One() {
@@ -82,6 +85,11 @@ public:
 	void caboom() {
 		cout << "CABOOM" << endl;
 	}
+
+	void name() {
+		cout << "Boom" << endl;
+	}
+
 	Boom() {
 	}
 	~Boom() {
@@ -97,6 +105,10 @@ public:
 		cout << "Earth turned" << endl;
 	}
 	
+	void name() {
+		cout << "Earth" << endl;
+	}
+
 	Earth() {
 	}
 	~Earth(){
@@ -110,6 +122,11 @@ public:
 	void print() {
 		cout << "This is a continent" << endl;
 	}
+
+	void name() {
+		cout << "Continent" << endl;
+	}
+
 	Continent() {
 	}
 	~Continent() {
@@ -168,9 +185,18 @@ public:
 		iter = iter + 1;
 		count = count + 1;
 	}
+	void remove() {
+		if ((count > 0) && (storage[iter] != nullptr)) {
+			delete storage[iter];
+			storage[iter] = nullptr;
+			count = count - 1;
+		}
+	}
 	bool eol() {
-		if (iter == size)
+		if (iter == size) {
+			iter = iter - 1;					// if we call storage[iter] now, then we'll go out of the storage limits
 			return true;
+		}
 		else
 			return false;
 	}
@@ -179,6 +205,12 @@ public:
 	}
 	void next() {
 		iter = iter + 1;
+	}
+	void back() {
+		if (iter > 0)
+			iter = iter - 1;
+		else
+			cout << "It is the first object in the storage" << endl;
 	}
 	Obj* getObject() {
 		return storage[iter];
@@ -199,6 +231,27 @@ public:
 	}
 };
 
+void subMenu(MyStorage& storage)
+{
+	cout << "What do you want to do? (1 - add an object, 0 - remove an object) -> ";
+	bool a;
+	cin >> a;
+
+	cout << "How much?" << endl;
+	int n;
+	cin >> n;
+
+	if (a == true)
+		for (int i = 0; i < n; i++)
+			storage.add();
+	else
+		for (int i = 0; i < n; i++)
+			storage.remove();
+
+	cout << "Now we have those objects here:" << endl;
+	for (storage.first(); !storage.eol(); storage.next())
+		storage.getObject()->name();
+}
 
 void menu()
 {
@@ -217,21 +270,32 @@ void menu()
 	cout << "Starting work" << endl;
 	double start = clock();										//clock() - uses <ctime> and returns time in milliseconds
 
+
+
 	for (int i = 0; i < n; i++)
 		storage.add();
 
 	for (storage.first(); !storage.eol(); storage.next())
 		storage.getObject()->someMethod();						//virtual methods work only with references
 
+
+
 	double end = clock();
 	cout << "Program working time equals " << (end - start)/1000 << " seconds" << endl;
+
+	cout << "Do you want to add/remove some object? (1 - yes, 0 - no) -> ";
+	bool a;
+	cin >> a;
+	if (a == true)
+		subMenu(storage);
+	else
+		return;
 
 }
 
 int main()
 {
 	menu();
-
 
 	cout << "Do you want to restart? (1 - yes, 0 - no) -> ";
 	bool a;
