@@ -74,6 +74,7 @@ protected:
 	int iter;
 	int size;
 	int count;
+	int classes = 1;							//amount of different classes, whose objects we can fit there
 public:
 	void sizeImprove() {
 		Obj** tempStorage = new Obj*[size];
@@ -88,17 +89,23 @@ public:
 		storage[size - 1] = nullptr;
 	}
 
-	void add(Obj *object) {
-		count = count + 1;
-		if (count <= size)
+	void add() {
+		Obj* object = nullptr;
+		int a = rand() % classes + 1;
+		switch (a) {
+		case 1:
+			object = new One;
+			break;
+		}
+		if (count < size)
 			storage[iter] = object;
 		else {
 			sizeImprove();
 			storage[size - 1] = object;
 		}
 		iter = iter + 1;
+		count = count + 1;
 	}
-
 	bool eol() {
 		if (iter == size)
 			return true;
@@ -131,17 +138,44 @@ public:
 };
 
 
-
-int main()
+void menu()
 {
-	srand(time(NULL));
-
 	MyStorage storage;
-	for (int i = 0; i < 5; i++)
-		storage.add(new One("11111"));
+
+	cout << "How many objects do you want to add? -> ";
+	int n = 0;
+	cin >> n;
+
+	if (n <= 0) {
+		cout << "n should be a natural number." << endl;
+		menu();
+		return;
+	}
+
+	cout << "Starting work" << endl;
+	double start = clock();										//clock() - uses <ctime> and returns time in milliseconds
+
+	for (int i = 0; i < n; i++)
+		storage.add();
 
 	for (storage.first(); !storage.eol(); storage.next())
 		storage.getObject()->someMethod();						//virtual methods work only with references
+
+	double end = clock();
+	cout << "Program working time equals " << (end - start)/1000 << " seconds" << endl;
+
+	cout << "Do you want to restart? (1 - yes, 0 - no) -> ";
+	bool a;
+	cin >> a;
+	if (a == true)
+		menu();
+	else
+		return;
+}
+
+int main()
+{
+	menu();
 
 	return 0;
 }
