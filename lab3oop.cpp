@@ -17,7 +17,6 @@ using namespace std;
 class Obj {
 public:
 	virtual void someMethod() {
-		this->someMethod();
 	}
 
 	Obj() {
@@ -71,11 +70,11 @@ public:
 class MyStorage {
 private:
 	Obj** storage;
-public:
+protected:
 	int iter;
 	int size;
 	int count;
-
+public:
 	void sizeImprove() {
 		Obj** tempStorage = new Obj*[size];
 		for (int i = 0; i < size; i++)
@@ -100,8 +99,20 @@ public:
 		iter = iter + 1;
 	}
 
-	Obj getObject(int iter) {
-		return *storage[iter];
+	bool eol() {
+		if (iter == size)
+			return true;
+		else
+			return false;
+	}
+	void first() {
+		iter = 0;
+	}
+	void next() {
+		iter = iter + 1;
+	}
+	Obj* getObject() {
+		return storage[iter];
 	}
 
 	MyStorage() {
@@ -129,8 +140,8 @@ int main()
 	for (int i = 0; i < 5; i++)
 		storage.add(new One("11111"));
 
-	for (int i = 0; i < 5; i++)
-		storage.getObject(i).someMethod();
+	for (storage.first(); !storage.eol(); storage.next())
+		storage.getObject()->someMethod();						//virtual methods work only with references
 
 	return 0;
 }
