@@ -156,6 +156,8 @@ public:
 
 		for (int i = iter + 2; i < size; i++)
 			storage[i] = tempStorage[i - iter - 2];
+
+		delete[] tempStorage;
 	}
 
 	void sizeImprove() {
@@ -169,6 +171,8 @@ public:
 		for (int i = 0; i < size - 1; i++)
 			storage[i] = tempStorage[i];
 		storage[size - 1] = nullptr;
+
+		delete[] tempStorage;
 	}
 
 	void add() {
