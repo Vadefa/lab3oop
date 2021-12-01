@@ -126,21 +126,16 @@ private:
 protected:
 	int iter;
 	int size;
-	int count;
-	int classes = 4;							//amount of different classes, whose objects we can fit there
+	int count;							//amount of different classes, whose objects we can fit there
 public:
 	void names() {
-		cout << "\nWe have those objects in the storage" << endl;
-		int tempiter = iter;
-		for (iter = 0; iter < size; iter = iter + 1)
-			if (storage[iter] != nullptr)
-				storage[iter]->name();
-			else
-				cout << "null" << endl;
-		iter = tempiter;
+		
 	}
 	int getIter() {
 		return iter;
+	}
+	int getSize() {
+		return size;
 	}
 
 
@@ -183,27 +178,7 @@ public:
 	}
 
 
-	void add() {
-		Obj* object = nullptr;
-		int a = rand() % classes + 1;
-		switch (a) {
-		case 1: {
-			object = new One;
-			break;
-		}
-		case 2: {
-			object = new Boom;
-			break;
-		}
-		case 3: {
-			object = new Earth;
-			break;
-		}
-		case 4: {
-			object = new Continent;
-			break;
-		}
-		}
+	void add(Obj* object) {
 		if (iter < size) {
 			if (storage[iter] == nullptr) {
 				storage[iter] = object;
@@ -269,6 +244,44 @@ public:
 };
 
 
+void names(MyStorage& storage) {
+	cout << "\nWe have those objects in the storage" << endl;
+	int tempiter = storage.getIter();
+	for (storage.first(); !storage.eol(); storage.next())
+		if (storage.getObject() != nullptr)
+			storage.getObject()->name();
+		else
+			cout << "null" << endl;
+	storage.first();
+	for (int i = 0; i < tempiter; i++)
+		storage.next();
+}
+
+Obj* addObjects(MyStorage& storage) {
+	int classes = 4;
+	Obj* object = nullptr;
+	int a = rand() % classes + 1;
+	switch (a) {
+	case 1: {
+		object = new One;
+		break;
+	}
+	case 2: {
+		object = new Boom;
+		break;
+	}
+	case 3: {
+		object = new Earth;
+		break;
+	}
+	case 4: {
+		object = new Continent;
+		break;
+	}
+	}
+	return object;
+}
+
 
 void proceed(MyStorage& storage) {
 	cout << "You are now at the " << storage.getIter() << " element. Type, where should we proceed to" << endl
@@ -286,7 +299,7 @@ void proceed(MyStorage& storage) {
 
 void subMenu(MyStorage& storage)
 {
-	storage.names();
+	names(storage);
 
 	cout << "\nWhat do you want to do? \n1 - add objects\n2 - remove objects\n3 - call a method of an object\n4 - withdraw an object\n ==> ";
 	short a;
@@ -300,8 +313,8 @@ void subMenu(MyStorage& storage)
 		int n;
 		cin >> n;
 		for (int i = 0; i < n; i++)
-			storage.add();
-		storage.names();
+			storage.add(addObjects(storage));
+		names(storage);
 		break;
 	}
 	case 2: {
@@ -312,7 +325,7 @@ void subMenu(MyStorage& storage)
 			storage.remove();
 			storage.next();
 		}
-		storage.names();
+		names(storage);
 		break;
 	}
 	case 3: {
@@ -326,7 +339,7 @@ void subMenu(MyStorage& storage)
 		Obj* object = storage.withdraw();
 		if (object != nullptr) {
 			cout << "We withdrawed this object and gave it to pointer variable. This object has name ";
-			object->name();
+			names(storage);
 		}
 		else
 			cout << "We didn't stole an object because this element was empty" << endl;
@@ -370,7 +383,7 @@ void menu()
 
 
 	for (int i = 0; i < n; i++)
-		storage.add();
+		storage.add(addObjects(storage));
 
 	for (storage.first(); !storage.eol(); storage.next())
 		storage.getObject()->someMethod();						//virtual methods work only with references
