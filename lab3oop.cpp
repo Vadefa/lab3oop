@@ -80,6 +80,7 @@ public:
 	}
 };
 
+
 class Earth : public Obj {
 public:
 	void someMethod() {
@@ -117,6 +118,8 @@ public:
 	}
 };
 
+
+
 class MyStorage {
 private:
 	Obj** storage;
@@ -140,11 +143,13 @@ public:
 		return iter;
 	}
 
+
 	Obj* withdraw() {
 		Obj* object = storage[iter];
 		storage[iter] = nullptr;
 		return object;
 	}
+
 
 	void shift() {
 		Obj** tempStorage = new Obj * [size - iter + 1];		// we putting an element after the storage[iter] element
@@ -159,6 +164,7 @@ public:
 
 		delete[] tempStorage;
 	}
+
 
 	void sizeImprove() {
 		Obj** tempStorage = new Obj*[size];
@@ -175,6 +181,7 @@ public:
 
 		delete[] tempStorage;
 	}
+
 
 	void add() {
 		Obj* object = nullptr;
@@ -245,6 +252,7 @@ public:
 		return storage[iter];
 	}
 
+
 	MyStorage() {
 		iter = 0;
 		count = 0;
@@ -259,6 +267,8 @@ public:
 		delete[] storage;
 	}
 };
+
+
 
 void proceed(MyStorage& storage) {
 	cout << "You are now at the " << storage.getIter() << " element. Type, where should we proceed to" << endl
