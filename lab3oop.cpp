@@ -140,6 +140,12 @@ public:
 		return iter;
 	}
 
+	Obj* withdraw() {
+		Obj* object = storage[iter];
+		storage[iter] = nullptr;
+		return object;
+	}
+
 	void shift() {
 		Obj** tempStorage = new Obj * [size - iter + 1];		// we putting an element after the storage[iter] element
 		for (int i = iter + 1; i < size; i++)
@@ -270,7 +276,7 @@ void subMenu(MyStorage& storage)
 {
 	storage.names();
 
-	cout << "\nWhat do you want to do? \n1 - add objects\n2 - remove objects\n3 - call a method of an object\n ==> ";
+	cout << "\nWhat do you want to do? \n1 - add objects\n2 - remove objects\n3 - call a method of an object\n4 - withdraw an object\n ==> ";
 	short a;
 	cin >> a;
 
@@ -302,6 +308,13 @@ void subMenu(MyStorage& storage)
 			storage.getObject()->someMethod();
 		else
 			cout << "This element of the storage is empty" << endl;
+		break;
+	}
+	case 4: {
+		Obj* object = storage.withdraw();
+		cout << "We withdrawed this object and gave it to pointer variable. This object has name ";
+		object->name();
+		delete object;
 		break;
 	}
 	default:
@@ -344,7 +357,6 @@ void menu()
 
 	for (storage.first(); !storage.eol(); storage.next())
 		storage.getObject()->someMethod();						//virtual methods work only with references
-
 
 
 	double end = clock();
