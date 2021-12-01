@@ -152,7 +152,7 @@ public:
 			tempStorage[i - iter - 1] = storage[i];
 			
 		sizeImprove();
-		storage[iter + 1] = nullptr;
+		storage[iter + 1] = nullptr;							// later we'll put a new element here
 
 		for (int i = iter + 2; i < size; i++)
 			storage[i] = tempStorage[i - iter - 2];
