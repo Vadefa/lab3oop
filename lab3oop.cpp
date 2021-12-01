@@ -317,8 +317,12 @@ void subMenu(MyStorage& storage)
 	}
 	case 4: {
 		Obj* object = storage.withdraw();
-		cout << "We withdrawed this object and gave it to pointer variable. This object has name ";
-		object->name();
+		if (object != nullptr) {
+			cout << "We withdrawed this object and gave it to pointer variable. This object has name ";
+			object->name();
+		}
+		else
+			cout << "We didn't stole an object because this element was empty" << endl;
 		delete object;
 		break;
 	}
