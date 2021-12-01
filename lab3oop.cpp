@@ -282,10 +282,7 @@ void proceed(MyStorage& storage) {
 			storage.back();
 	cout << "Now you are at the " << storage.getIter() << " element." << endl;
 }
-bool ask() {
 
-	return true;
-}
 
 void subMenu(MyStorage& storage)
 {
@@ -352,6 +349,7 @@ void subMenu(MyStorage& storage)
 	return;
 }
 
+
 void menu()
 {
 	MyStorage storage;
@@ -390,6 +388,7 @@ void menu()
 		return;
 
 }
+
 
 int main()
 {
