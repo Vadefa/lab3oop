@@ -128,9 +128,6 @@ protected:
 	int size;
 	int count;							//amount of different classes, whose objects we can fit there
 public:
-	void names() {
-		
-	}
 	int getIter() {
 		return iter;
 	}
